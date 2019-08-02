@@ -6,13 +6,13 @@ replicaCount: 1
 
 image:
   # uncomment and fill registry name
-  # registry: 
-  name: on-demand-micro-services-deployment-k8s
-  tag: latest
+  registry: 192.168.92.139:5000
+  name: pase/helm-web-api
+  tag: v1.0
   pullPolicy: Always
 
 service:
-  type: LoadBalancer
+  type: ClusterIP
   port: 4000
 
 namespace: default

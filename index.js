@@ -1,15 +1,15 @@
-const express = require('express');
+﻿const express = require('express');
 const bodyParser = require('body-parser');
 const Helm = require('./on-demand-micro-services-deployment-k8s/helm');
 const PortsAllocator = require('./on-demand-micro-services-deployment-k8s/ports-allocator');
 const IngressManager = require('./on-demand-micro-services-deployment-k8s/ingress-manager');
 
 const app = express();
+var multer  = require('multer');
+var upload = multer({ dest: 'tmp/' })
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
-// Helm functionallity
 
 /**
  * Installs the requested chart into the Kubernetes cluster
@@ -41,21 +41,7 @@ app.post('/install',
  */
 app.post('/delete',
   async (req, res) => {
-    const delOptions = req.body;
-    const helm = new Helm();
-    await helm.delete(delOptions)
-      .then(() => {
-        res.send({
-          status: 'success',
-        });
-      }).catch((err) => {
-        console.error(`Chart deletion failed with exception :${err.toString()}`);
-        res.statusCode = 500;
-        res.send({
-          status: 'failed',
-          reason: 'Installation failed.',
-        });
-      });
+    execPost(req, res,'delete');
   });
 
 /**
@@ -63,21 +49,7 @@ app.post('/delete',
  */
 app.post('/upgrade',
   async (req, res) => {
-    const deployOptions = req.body;
-    const helm = new Helm();
-    await helm.upgrade(deployOptions)
-      .then(() => {
-        res.send({
-          status: 'success',
-        });
-      }).catch((err) => {
-        console.error(`Chart upgrade failed with exception :${err.toString()}`);
-        res.statusCode = 500;
-        res.send({
-          status: 'failed',
-          reason: 'Installation failed.',
-        });
-      });
+    execPost(req, res,'upgrade');
   });
 
 // Ports allocator functionallity
@@ -134,6 +106,91 @@ app.post('/setrule',
         });
       });
   });
+
+//helm repo list
+app.get('/repoList',
+  async (req, res) => {
+    execGet(req, res,'repoList');
+  });
+
+//helm search [repoName]
+app.get('/search',
+  async (req, res) => {
+    execGet(req, res,'search');
+  });
+
+//helm inspect
+app.get('/inspect',
+  async (req, res) => {
+    execGet(req, res,'inspect');
+  });
+
+//helm list
+app.get('/list',
+  async (req, res) => {
+    execGet(req, res,'list');
+  });
+
+//helm history
+app.get('/history',
+  async (req, res) => {
+    execGet(req, res,'history');
+  });
+
+//helm rollback
+app.post('/rollback',
+  async (req, res) => {
+    execPost(req, res,'rollback');
+  });
+
+//helm rollback
+app.post('/push',upload.single('chartPackage'),
+  async (req, res) => {
+    console.log('will be push file -- ');
+    console.log(req.file);
+    //接受文件，放本地
+    //获得本地路径名称 chartFile
+    var chartFile = req.file.path;
+    req.body.chartFile=chartFile;
+    execPost(req, res,'push');
+  });
+
+//通用get方法
+async function execGet(req, res,functionName) {
+    const deployOptions = req.query;
+    const helm = new Helm();
+    await helm[functionName](deployOptions)
+      .then((execGetResponse) => {
+        res.send(execGetResponse);
+      }).catch((err) => {
+        console.error(`helm-api ${functionName} failed with exception :${err.toString()}`);
+        res.statusCode = 500;
+        res.send({
+          status: 'failed',
+          reason: `execGet failed:${err.toString()}`,
+        });
+      });
+}
+
+//通用post方法
+async function execPost(req, res,functionName) {
+    const deployOptions = req.body;
+    const helm = new Helm();
+    await helm[functionName](deployOptions)
+      .then((execPostResponse) => {
+        res.send({
+          status: 'success',
+          details: execPostResponse
+        });
+      }).catch((err) => {
+        console.error(`helm-api ${functionName} failed with exception :${err.toString()}`);
+        res.statusCode = 500;
+        res.send({
+          status: 'failed',
+          reason: `execPost failed:${err.toString()}`,
+        });
+      });
+}
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

@@ -10,7 +10,7 @@ ARG HELM_VERSION="v2.12.3"
 
 ENV HELM_HOME="/usr/local/bin/"
 ENV HELM_BINARY="/usr/local/bin/helm"
-ENV HELM_PASE_REPO="http://192.168.92.139:8879"
+ENV HELM_PASE_REPO="http://127.0.0.1:8080"
 
 RUN mkdir /usr/local/bin/plugins
 

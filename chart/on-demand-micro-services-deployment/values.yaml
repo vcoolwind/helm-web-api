@@ -6,8 +6,8 @@ replicaCount: 1
 
 image:
   # uncomment and fill registry name
-  registry: 192.168.92.139:5000
-  name: pase/helm-web-api
+  registry:  docker-registry.default.svc:5000
+  name: default/helm-web-api
   tag: v1.0
   pullPolicy: Always
 
@@ -32,3 +32,5 @@ rbac:
   tillerServiceAccount: tiller
   tillerRoleBindingName: tiller-user-binding
   tillerNamespace: kube-system
+env：
+  helmPaseRepo: http://chartmuseum-chartmuseum.pase-system.svc:8080

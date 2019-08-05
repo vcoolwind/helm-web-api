@@ -40,4 +40,4 @@ spec:
           - name: TILLER_SERVICE_ACCOUNT
             value: {{ .Values.rbac.tillerServiceAccount }}
           - name: HELM_PASE_REPO
-            value: {{ .Values.env.helmPaseRepo }}
+            value: "{{ .Values.env.helmPaseRepo }}"

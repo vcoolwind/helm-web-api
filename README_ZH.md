@@ -28,6 +28,8 @@ curl   http://helm-service-on-demand-micro-services-deployment.default.svc:4000/
 curl   http://helm-service-on-demand-micro-services-deployment.default.svc:4000/repolist
 
 
+curl   http://helm-web-api-on-demand-micro-services-deployment.pase-system.svc:4000/repolist
+
 对应用的分类：
  helm inspect values pase/on-demand-micro-services-deployment
 放在values中

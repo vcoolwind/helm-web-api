@@ -1,12 +1,26 @@
+1、各个image推入集群的registry中（tiller chartmuseum helm-web-api） ：算了，还是使用安装时的镜像吧。 防止被删除？
+2、使用 chartmuseum yaml文件部署chartmuseum chart仓库，安装在pase-system命名空间下
+3、使用tiller yaml文件部署helm tiller服务器
+4、拷贝helm二进制文件到master节点，并配置可执行，并添加chartmuseum仓库地址
+5、把helm-web-api对应的chart导入chartmuseum仓库，并通过helm安装helm-web-api
+
+6、后续都是通过命令行上传chart，安装chart。
+
+------------------------------------------------------------------------------------------------------------------------
+
+
 docker pull chartmuseum/chartmuseum:v0.8.2
 docker tag chartmuseum/chartmuseum:v0.8.2 192.168.92.139:5000/pase/chartmuseum:v0.8.2
 docker push 192.168.92.139:5000/pase/chartmuseum:v0.8.2
 
-
-
 docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.12.3
 docker tag registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.12.3 192.168.92.139:5000/pase/tiller:v2.12.3
 docker push 192.168.92.139:5000/pase/tiller:v2.12.3
+
+
+docker push 192.168.92.139:5000/pase/tiller:v2.12.3
+
+
 
 oc new-project pase-helm
 

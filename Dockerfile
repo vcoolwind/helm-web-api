@@ -40,6 +40,9 @@ RUN /usr/local/bin/helm init --client-only --skip-refresh
 RUN /usr/local/bin/helm repo remove stable
 RUN /usr/local/bin/helm repo remove local
 RUN /usr/local/bin/helm plugin install https://github.com/chartmuseum/helm-push
+RUN mkdir -p /usr/src/tmp
+RUN chmod 777 /usr/src/tmp
+RUN chmod 777 /usr/local/bin/repository
 
 EXPOSE 4000
 CMD [ "npm", "start" ]

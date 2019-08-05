@@ -15,7 +15,7 @@ service:
   type: ClusterIP
   port: 4000
 
-namespace: default
+namespace: pase-system
 
 # for the ingress functionallity - the ingress is the controller which exposes the newly deployed service
 # Refer to the docs for more details
@@ -32,5 +32,5 @@ rbac:
   tillerServiceAccount: tiller
   tillerRoleBindingName: tiller-user-binding
   tillerNamespace: kube-system
-env：
+env:
   helmPaseRepo: http://chartmuseum-chartmuseum.pase-system.svc:8080

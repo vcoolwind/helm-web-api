@@ -41,6 +41,12 @@ class Helm {
       console.log(`Installing specified version: ${version}`);
       installCommand = `${installCommand} --version ${version}`;
     }
+    //set values overwrite separate values with commas: key1=val1,key2=val2
+    const { setvalues } = deployOptions;
+    if (setvalues !== undefined && setvalues != null && setvalues !== '') {
+      console.log(`Installing specified setvalues: ${setvalues}`);
+      installCommand = `${installCommand} --set ${setvalues}`;
+    }
 
     console.log(`Install command: ${installCommand}`);
     return this._installOrUpgradeChart(installCommand, deployOptions)

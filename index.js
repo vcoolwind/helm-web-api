@@ -4,9 +4,11 @@ const Helm = require('./on-demand-micro-services-deployment-k8s/helm');
 const PortsAllocator = require('./on-demand-micro-services-deployment-k8s/ports-allocator');
 const IngressManager = require('./on-demand-micro-services-deployment-k8s/ingress-manager');
 
+const helmUploadHome = process.env.HELM_UPLOAD_HOME;
+
 const app = express();
 var multer  = require('multer');
-var upload = multer({ dest: 'tmp/' })
+var upload = multer({ dest: helmUploadHome })
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

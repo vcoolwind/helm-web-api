@@ -1,8 +1,10 @@
 ﻿const util = require('util');
 const exec = util.promisify(require('child_process').exec);
+const path = require('path');
 
 const helmBinaryLocation = process.env.HELM_BINARY;
 const helmPaseRepo = process.env.HELM_PASE_REPO;
+const helmUploadHome = process.env.HELM_UPLOAD_HOME;
 /** Since the installation is via a Chart, init was already been called, no need to init again.
  * We are leaving this as a comment, in case someone will need to execute it when
  * installed via yaml files
@@ -46,6 +48,22 @@ class Helm {
     if (setvalues !== undefined && setvalues != null && setvalues !== '') {
       console.log(`Installing specified setvalues: ${setvalues}`);
       installCommand = `${installCommand} --set ${setvalues}`;
+    }
+    //set values overwrite separate values with commas: key1=val1,key2=val2
+    const { valueFile } = deployOptions;
+    if (valueFile !== undefined && valueFile != null && valueFile !== '') {
+      console.log(`Installing specified valueFile: ${valueFile}`);
+      var tmpValueFile = path.join(helmUploadHome, chartName+"_values_"+Date.now());
+      var fs = require("fs");
+      fs.writeFile(file,tmpValueFile,{flag:'w',encoding:'utf-8',mode:'0666'},function(err){
+           if(err){
+               console.log(`valueFile write failed: ${tmpValueFile} -- ${err}`);
+               throw new Error(err);
+           }else{
+               console.log(`valueFile write successfully: ${tmpValueFile}`);
+               installCommand = `${installCommand} -f ${valueFile}`;
+           }
+        });
     }
 
     console.log(`Install command: ${installCommand}`);

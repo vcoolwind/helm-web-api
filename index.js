@@ -33,7 +33,7 @@ app.post('/install',
         res.statusCode = 500;
         res.send({
           status: 'failed',
-          reason: 'Installation failed.',
+          reason: `execPost failed:${err.toString()}`,
         });
       });
   });

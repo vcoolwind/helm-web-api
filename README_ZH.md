@@ -28,20 +28,7 @@ curl   http://helm-service-on-demand-micro-services-deployment.default.svc:4000/
 curl   http://helm-service-on-demand-micro-services-deployment.default.svc:4000/repolist
 
 
-curl   http://helm-web-api-on-demand-micro-services-deployment.pase-system.svc:4000/repolist
-
-对应用的分类：
- helm inspect values pase/on-demand-micro-services-deployment
-放在values中
-chartType: 应用大类-企划、人事
-chartSubType: 应用小类-企划、人事
-tenant： 租户
-
-是放在values中还是表中？ 待商榷
-
-
-镜像不能放在各个租户的的分区，应该放入公共分区，用表存储辅助信息。
-放在租户分区，会导致镜像和租户绑定，导致chart无法编排。
+curl   http://helm-web-api-on-demand-micro-services-deployment.pase-system.svc:4000/repolis
 
 
 使用镜像启动chartmuseum作为仓库

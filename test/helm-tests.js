@@ -55,6 +55,12 @@ describe('helm', function () {
         let helm = new Helm();
         helm.push({chartFile:'chart/chart.tgz'});
         assert.equal(1,1);
+    });
+    it.only('pushReturnName',async function () {
+        let helm = new Helm();
+        helm.pushReturnName({chartFile:'chart/chart.tgz'});
+        assert.equal(1,1);
     })
+
 });
 

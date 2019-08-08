@@ -2,7 +2,7 @@
 const exec = util.promisify(require('child_process').exec);
 const path = require('path');
 
-const helmBinaryLocation = process.env.HELM_BINARY;
+const helmBinaryLocation = process.env.HELM_BINARY!=undefined?process.env.HELM_BINARY:'/home/awei/workspace/helm-web-api/helmbinary/helm';
 const helmPaseRepo = process.env.HELM_PASE_REPO;
 const helmUploadHome = process.env.HELM_UPLOAD_HOME;
 /** Since the installation is via a Chart, init was already been called, no need to init again.
@@ -174,13 +174,24 @@ class Helm {
     }
 
     async pushReturnName(deployOptions) {
-        const result = await this.push(deployOptions);
-        if (result == "") {
-            const chartFile = Helm._blankFix(deployOptions.chartFile);
-            console.log(chartFile);
-        } else {
-
-        }
+        let result = await this.push(deployOptions);
+        //console.log('-----------------------------------------')        
+        let chartname=result.json.substr(0,result.json.indexOf("to"));
+        let chartversoion=chartname.split(" ")[1];
+        //the line index of name and version
+        let lineIndex=chartversoion.lastIndexOf("-");
+        chartname=chartversoion.substr(0,lineIndex);
+        let version=chartversoion.substr(lineIndex+1,chartversoion.length-chartname.length-1-4);
+        // console.log(chartname);
+        // console.log(version);
+        // console.log('66666666666666666666666666666666666666666666');
+       let returnPromise=new Promise((resolve,reject)=>{
+           resolve({
+               chartname:chartname,
+               version:version
+           });
+       });
+       return returnPromise;
     }
 
     static _blankFix(arg) {

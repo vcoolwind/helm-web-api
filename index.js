@@ -9,11 +9,9 @@ const helmUploadHome = process.env.HELM_UPLOAD_HOME;
 const app = express();
 var multer  = require('multer');
 var upload = multer({ dest: helmUploadHome })
-
-
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
 
 /**
  * Installs the requested chart into the Kubernetes cluster
@@ -156,7 +154,7 @@ app.post('/push',upload.single('chartPackage'),
     //获得本地路径名称 chartFile
     var chartFile = req.file.path;
     req.body.chartFile=chartFile;
-    execPost(req, res,'push');
+    execPost(req, res,'pushReturnName');
   });
 
 //通用get方法
@@ -182,10 +180,13 @@ async function execPost(req, res,functionName) {
     const helm = new Helm();
     await helm[functionName](deployOptions)
       .then((execPostResponse) => {
-        res.send({
-          status: 'success',
-          details: execPostResponse
-        });
+        let result={
+          success:true,
+          msg:"",
+          data:""
+        };
+        result.data=execPostResponse;
+        res.send(result);
       }).catch((err) => {
         console.error(`helm-api ${functionName} failed with exception :${err.toString()}`);
         res.statusCode = 500;

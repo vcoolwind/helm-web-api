@@ -51,5 +51,10 @@ describe('helm', function () {
         var res = await helm.upgrade(data);
         assert.equal(res, upgradeCommand);
     });
+    it('push',async function () {
+        let helm = new Helm();
+        helm.push({chartFile:'chart/chart.tgz'});
+        assert.equal(1,1);
+    })
 });
 

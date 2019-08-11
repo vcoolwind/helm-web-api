@@ -40,3 +40,4 @@ docker run --rm -d \
   -e STORAGE=local \
   -e STORAGE_LOCAL_ROOTDIR=/charts \
   chartmuseum/chartmuseum
+  

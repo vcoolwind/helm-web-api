@@ -39,7 +39,7 @@ COPY package*.json ./
 
 RUN npm --registry https://registry.npm.taobao.org install
 
-# Bundle app source
+# Bundle app source for test
 COPY . .
 
 RUN /usr/local/bin/helm init --client-only --skip-refresh
